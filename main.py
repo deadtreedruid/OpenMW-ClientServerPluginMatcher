@@ -38,11 +38,12 @@ def main():
             if "doesn't match" in line:
                 continue
 
-            # strip spaces
-            line.replace(" ", "")
+            # line only has server plugin
+            if line[0] == ' ':
+                continue
 
             # first instance is client side list, second is server side
-            # formatted as ClientSideMod.esm 0xFFFFFFFF ServerSideMod.esm 0xFFFFFFFF (without spaces)
+            # formatted as ClientSideMod.esm 0xFFFFFFFF ServerSideMod.esm 0xFFFFFFFF
             # .esm or .esp interchangeable, some mod authors inexplicably use .ESP so lower the line for the search
             extensionIdx = line.lower().find(".es")
             if extensionIdx == -1:
