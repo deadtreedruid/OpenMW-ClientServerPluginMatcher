@@ -3,7 +3,6 @@ import os
 import json
 
 # Takes tes3mp-client logs and converts the client side plugin list to a formatted server plugin list
-
 def main():
     directory = os.path.dirname(__file__)
 
@@ -43,31 +42,20 @@ def main():
             line.replace(" ", "")
 
             # first instance is client side list, second is server side
-            # formatted as ClientSideMod.esm0xFFFFFFFFServerSideMod.esm0xFFFFFFFF
-            # .esm or .esp interchangeable
-            # some mod authors publish with capital file extensions, but we can't just .lower() since OpenMW cares about the mod name's casing
-            extensionIdx = line.find(".es")
-            uppercaseExtensionIdx = line.find(".ES")
-
-            # TODO: clean this up
-            # neither found, garbage line
-            if uppercaseExtensionIdx == -1 and extensionIdx == -1:
+            # formatted as ClientSideMod.esm 0xFFFFFFFF ServerSideMod.esm 0xFFFFFFFF (without spaces)
+            # .esm or .esp interchangeable, some mod authors inexplicably use .ESP so lower the line for the search
+            extensionIdx = line.lower().find(".es")
+            if extensionIdx == -1:
                 continue
-            # all mod extensions are uppercase, just use first found
-            elif extensionIdx == -1 and uppercaseExtensionIdx != -1:
-                extensionIdx = uppercaseExtensionIdx
-            # one of each type, use whichever comes first
-            elif extensionIdx != -1 and uppercaseExtensionIdx != -1 and uppercaseExtensionIdx < extensionIdx:
-                extensionIdx = uppercaseExtensionIdx
 
             hashIdx = line.find("0x")
             if hashIdx == -1:
                 continue
 
-            # from start of string to end of extension
+            # from start of string + 4 for the extension name following the period
             modName = line[0:extensionIdx + 4]            
 
-            # full hex value
+            # adding the 8 hex values and the seperator
             modHash = line[hashIdx:hashIdx + 10]
 
             # output as { "0": { "ModName.esp": ["Hash1"] } }
