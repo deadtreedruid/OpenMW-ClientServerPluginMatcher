@@ -45,8 +45,6 @@ def main():
             # first instance is client side list, second is server side
             # formatted as ClientSideMod.esm0xFFFFFFFFServerSideMod.esm0xFFFFFFFF
             # .esm or .esp interchangeable
-
-            # find client side mod name extension (can be either .esm or .esp)
             # some mod authors publish with capital file extensions, but we can't just .lower() since OpenMW cares about the mod name's casing
             extensionIdx = line.find(".es")
             uppercaseExtensionIdx = line.find(".ES")
